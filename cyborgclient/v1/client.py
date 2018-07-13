@@ -44,7 +44,7 @@ def _load_session(cloud=None, insecure=False, timeout=None, **kwargs):
 
 def _load_service_type(session,
                        service_type=None, service_name=None,
-                       interface=None, region_name=None):
+                       interface=None, region_name=None, **kwargs):
     try:
         # Trigger an auth error so that we can throw the exception
         # we always have
@@ -52,7 +52,8 @@ def _load_service_type(session,
             service_type=service_type,
             service_name=service_name,
             interface=interface,
-            region_name=region_name)
+            region_name=region_name,
+            **kwargs)
     except Exception as e:
         raise RuntimeError(str(e))
 
@@ -93,6 +94,7 @@ def _load_session_client(session=None, endpoint_override=None, username=None,
             service_name=service_name,
             interface=interface,
             region_name=region_name,
+            **kwargs
         )
 
     return httpclient.SessionClient(
@@ -103,6 +105,7 @@ def _load_session_client(session=None, endpoint_override=None, username=None,
         session=session,
         endpoint_override=endpoint_override,
         api_version=api_version,
+        **kwargs
     )
 
 
