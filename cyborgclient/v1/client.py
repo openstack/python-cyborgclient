@@ -19,6 +19,7 @@ from oslo_utils import importutils
 
 from cyborgclient.common import httpclient
 from cyborgclient.v1 import accelerators
+from cyborgclient.v1 import deployables
 
 profiler = importutils.try_import("osprofiler.profiler")
 
@@ -181,6 +182,7 @@ class Client(object):
             )
 
         self.accelerators = accelerators.AcceleratorManager(self.http_client)
+        self.deployables = deployables.DeployableManager(self.http_client)
 
         profile = kwargs.pop("profile", None)
         if profiler and profile:
