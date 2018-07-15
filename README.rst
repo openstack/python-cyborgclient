@@ -103,9 +103,11 @@ There's also a complete Python API, but it has not yet been documented.
 
 Quick-start using keystone::
 
-    # use v3 auth with http://controller:5000/v3
-    >>> from cyborgclient import client
-    >>> nt = client.Client(USERNAME, PASSWORD, PROJECT_ID, AUTH_URL)
+    # pass auth plugin and session to Client init.
+    # service_parameters contains servive_name, service_type, interface and
+    # region name.
+    >>> from cyborgclient.v1 import client
+    >>> nt = client.Client(auth=auth,session=_SESSION,**service_parameters)
     >>> nt.accelerators.list()
     [...]
 

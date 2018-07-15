@@ -60,7 +60,7 @@ from cyborgclient import version
 
 LATEST_API_VERSION = ('1', 'latest')
 DEFAULT_INTERFACE = 'public'
-DEFAULT_SERVICE_TYPE = 'acceleration'
+DEFAULT_SERVICE_TYPE = 'accelerator'
 
 logger = logging.getLogger(__name__)
 
