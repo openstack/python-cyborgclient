@@ -24,6 +24,7 @@ class Deployable(basemodels.BaseModel):
 
 class DeployableManager(basemodels.BaseModelManager):
     api_name = "deployables"
+    base_url = "accelerators/deployables"
     resource_class = Deployable
 
     def deallocation(self, deployable_uuid):
@@ -32,12 +33,12 @@ class DeployableManager(basemodels.BaseModelManager):
         :param deployable_uuid: deployable_uuid which is attached to the
         instance.
         """
-        body = {"op": "replace", "path": "/instance_uuid", "value": None}
-        resp = self._update("/deployables/%s" % deployable_uuid, body)
+        body = [{"op": "replace", "path": "/instance_uuid", "value": None}]
+        resp = self.update(deployable_uuid, body)
         return resp
 
     def allocation(self, deployable_uuid, instance_uuid):
-        body = {"op": "replace", "path": "/instance_uuid",
-                "value": instance_uuid}
-        resp = self._update("/deployables/%s" % deployable_uuid, body)
+        body = [{"op": "replace", "path": "/instance_uuid",
+                "value": instance_uuid}]
+        resp = self.update(deployable_uuid, body)
         return resp

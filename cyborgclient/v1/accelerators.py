@@ -24,4 +24,5 @@ class Accelerator(basemodels.BaseModel):
 
 class AcceleratorManager(basemodels.BaseModelManager):
     api_name = "accelerators"
+    base_url = "accelerators"
     resource_class = Accelerator

@@ -33,15 +33,16 @@ class BaseModel(base.Resource):
 
 
 class BaseModelManager(base.Manager):
-    # api_name needs to be overridden by any derived class.
-    # api_name should be pluralized and lowercase, e.g. "clustertemplates", as
-    # it shows up in the URL path: "/v1/{api_name}"
+    # base_url needs to be overridden by any derived class.
+    # base_url should be pluralized and lowercase, e.g. "clustertemplates", as
+    # it shows up in the URL path: "/v1/{base_url}"
     api_name = ''
+    base_url = ''
 
     @classmethod
     def _path(cls, id=None):
-        return '/v1/' + cls.api_name + \
-               '/%s' % id if id else '/v1/' + cls.api_name
+        return '/v1/' + cls.base_url + \
+               '/%s' % id if id else '/v1/' + cls.base_url
 
     def list(self, limit=None, marker=None, sort_key=None,
              sort_dir=None, detail=False):
