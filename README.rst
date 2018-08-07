@@ -15,10 +15,6 @@ python-cyborgclient
     :target: https://pypi.python.org/pypi/python-cyborgclient/
     :alt: Latest Version
 
-.. image:: https://img.shields.io/pypi/dm/python-cyborgclient.svg
-    :target: https://pypi.python.org/pypi/python-cyborgclient/
-    :alt: Downloads
-
 python-cyborgclient is a python bindings to the OpenStack Cyborg API. There's
 a Python API (the ``cyborgclient`` module), and a command-line script
 (``cyborg``). Each implements 100% of the OpenStack Cyborg API.
