@@ -81,12 +81,12 @@ params, but it's easier to just set them as environment variables::
 
 You will also need to define the authentication url with ``--os-auth-url``
 and the version of the API with ``--os-accelerator-api-version``. Or set them
-as environment variables as well, ``OS_ACCELERATOR_API_VERSION=3``. If you
+as environment variables as well, ``OS_ACCELERATOR_API_VERSION=1``. If you
 are using Keystone, you need to set the ``OS_AUTH_URL`` to the keystone
 endpoint::
 
     export OS_AUTH_URL=http://controller:5000/v3
-    export OS_ACCELERATOR_API_VERSION=3
+    export OS_ACCELERATOR_API_VERSION=1
 
 Since Keystone can return multiple regions in the Service Catalog, you
 can specify the one you want with ``--os-region-name`` (or

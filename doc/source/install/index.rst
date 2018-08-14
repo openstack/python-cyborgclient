@@ -1,17 +1,12 @@
-===============================================
-Cyborg Python Client service installation guide
-===============================================
+=======================================
+Cyborg Python Client installation guide
+=======================================
 
-.. toctree::
-   :maxdepth: 2
+At the command line::
 
-   get_started.rst
-   install.rst
-   verify.rst
-   next-steps.rst
+    $ pip install python-cyborgclient
 
-The Cyborg Python Client service (cyborgclient) provides...
+Or, if you have virtualenvwrapper installed::
 
-This chapter assumes a working setup of OpenStack following the
-`OpenStack Installation Tutorial
-<https://docs.openstack.org/project-install-guide/ocata/>`_.
+    $ mkvirtualenv python-cyborgclient
+    $ pip install python-cyborgclient
