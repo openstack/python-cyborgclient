@@ -40,12 +40,14 @@ class BaseModelManager(base.Manager):
     base_url = ''
 
     @classmethod
-    def _path(cls, id=None):
+    def _path(cls, id=None, filters=None):
+        if filters:
+            return '/v1/' + cls.base_url + filters
         return '/v1/' + cls.base_url + \
                '/%s' % id if id else '/v1/' + cls.base_url
 
     def list(self, limit=None, marker=None, sort_key=None,
-             sort_dir=None, detail=False):
+             sort_dir=None, detail=False, **add_filters):
         """Retrieve a list of accelerators.
 
         :param marker: Optional, the UUID of a baymodel, eg the last
@@ -75,17 +77,18 @@ class BaseModelManager(base.Manager):
             limit = int(limit)
 
         filters = utils.common_filters(marker, limit, sort_key, sort_dir)
+        utils.add_filters(filters, **add_filters)
 
         path = ''
         if detail:
             path += 'detail'
         if filters:
             path += '?' + '&'.join(filters)
-
         if limit is None:
-            return self._list(self._path(path), self.__class__.api_name)
+            return self._list(self._path(filters=path),
+                              self.__class__.api_name)
         else:
-            return self._list_pagination(self._path(path),
+            return self._list_pagination(self._path(filters=path),
                                          self.__class__.api_name,
                                          limit=limit)
 

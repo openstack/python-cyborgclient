@@ -29,13 +29,25 @@ def common_filters(marker=None, limit=None, sort_key=None, sort_dir=None):
     """
     filters = []
     if isinstance(limit, int):
-        filters.append('limit=%s' % limit)
+        filters.append('filters.field=limit')
+        filters.append('filters.value=%d' % limit)
     if marker is not None:
-        filters.append('marker=%s' % marker)
+        filters.append('filters.field=marker')
+        filters.append('filters.value=%s' % marker)
     if sort_key is not None:
-        filters.append('sort_key=%s' % sort_key)
+        filters.append('filters.field=sort_key')
+        filters.append('filters.value=%s' % sort_key)
     if sort_dir is not None:
-        filters.append('sort_dir=%s' % sort_dir)
+        filters.append('filters.field=sort_dir')
+        filters.append('filters.value=%s' % sort_dir)
+    return filters
+
+
+def add_filters(filters, **kwargs):
+    if kwargs:
+        for field, value in kwargs.iteritems():
+            filters.append('filters.field=%s' % field)
+            filters.append('filters.value=%s' % value)
     return filters
 
 
