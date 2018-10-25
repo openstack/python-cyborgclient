@@ -106,7 +106,6 @@ def _load_session_client(session=None, endpoint_override=None, username=None,
         session=session,
         endpoint_override=endpoint_override,
         api_version=api_version,
-        **kwargs
     )
 
 
