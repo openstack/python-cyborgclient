@@ -13,9 +13,7 @@
 #    under the License.
 
 from cyborgclient.common import cliutils as utils
-from cyborgclient.common import utils as cyborg_utils
 from cyborgclient.i18n import _
-from cyborgclient.v1 import basemodels
 
 
 @utils.arg('--limit',
@@ -43,19 +41,6 @@ from cyborgclient.v1 import basemodels
 def do_accelerator_list(cs, args):
     """Print a list of accelerators.
 
-    (Deprecated in favor of cluster-template-list.)
+    (Deprecated for V1)
     """
-    accelerators = cs.accelerators.list(limit=args.limit,
-                                        sort_key=args.sort_key,
-                                        sort_dir=args.sort_dir,
-                                        detail=args.detail)
-    if args.detail:
-        columns = basemodels.OUTPUT_ATTRIBUTES
-    else:
-        columns = ['uuid', 'name']
-    columns += utils._get_list_table_columns_and_formatters(
-        args.fields, accelerators,
-        exclude_fields=(c.lower() for c in columns))[0]
-    utils.print_list(accelerators, columns,
-                     {'versions': cyborg_utils.print_list_field('versions')},
-                     sortby_index=None)
+    utils.deprecated("v1 APIs for accelerator objects are deprecated.")
