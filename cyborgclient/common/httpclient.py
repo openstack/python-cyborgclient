@@ -156,7 +156,7 @@ class HTTPClient(object):
         kwargs['headers'] = copy.deepcopy(kwargs.get('headers', {}))
         kwargs['headers'].setdefault('User-Agent', USER_AGENT)
         if self.api_version:
-            version_string = 'container-infra %s' % self.api_version
+            version_string = 'accelerator %s' % self.api_version
             kwargs['headers'].setdefault(
                 'OpenStack-API-Version', version_string)
         if self.auth_token:
@@ -334,7 +334,7 @@ class SessionClient(adapter.LegacyJsonAdapter):
         if osprofiler_web:
             kwargs['headers'].update(osprofiler_web.get_trace_id_headers())
         if self.api_version:
-            version_string = 'container-infra %s' % self.api_version
+            version_string = 'accelerator %s' % self.api_version
             kwargs['headers'].setdefault(
                 'OpenStack-API-Version', version_string)
 

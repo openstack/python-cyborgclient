@@ -230,7 +230,7 @@ class OpenStackCyborgShell(object):
 
         parser.add_argument('--service-type',
                             metavar='<service-type>',
-                            help=_('Defaults to container-infra for all '
+                            help=_('Defaults to accelerator for all '
                                    'actions.'))
         parser.add_argument('--service_type',
                             help=argparse.SUPPRESS)
