@@ -14,8 +14,11 @@
 #
 import logging
 
+from cyborgclient import exceptions as exc
 
 LOG = logging.getLogger(__name__)
+
+from oslo_serialization import jsonutils
 
 
 def common_filters(marker=None, limit=None, sort_key=None, sort_dir=None):
@@ -110,3 +113,47 @@ def clean_listing_columns(headers, columns, data_sample):
             col_headers.append(header)
             cols.append(col)
     return tuple(col_headers), tuple(cols)
+
+
+def json_formatter(js):
+    return jsonutils.dumps(js, indent=2, ensure_ascii=False)
+
+
+def split_and_deserialize(string):
+    """Split and try to JSON deserialize a string.
+
+    Gets a string with the KEY=VALUE format, split it (using '=' as the
+    separator) and try to JSON deserialize the VALUE.
+    :returns: A tuple of (key, value).
+    """
+
+    try:
+        key, value = string.split("=", 1)
+    except ValueError:
+        raise exc.CommandError(_('Attributes must be a list of '
+                                 'PATH=VALUE not "%s"') % string)
+    try:
+        value = jsonutils.loads(value)
+    except ValueError:
+        pass
+
+    return (key, value)
+
+
+def args_array_to_patch(op, attributes):
+    patch = []
+    for attr in attributes:
+        # Sanitize
+        if not attr.startswith('/'):
+            attr = '/' + attr
+
+        if op in ['add', 'replace']:
+            path, value = split_and_deserialize(attr)
+            patch.append({'op': op, 'path': path, 'value': value})
+
+        elif op == "remove":
+            # For remove only the key is needed
+            patch.append({'op': op, 'path': attr})
+        else:
+            raise exc.CommandError(_('Unknown PATCH operation: %s') % op)
+    return patch

@@ -1,5 +1,3 @@
-#   Copyright 2016 Huawei, Inc. All rights reserved.
-#
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -13,49 +11,94 @@
 #   under the License.
 #
 
+"""OpenStackClient plugin for Accelerator management service."""
+
 import logging
 
+from openstack.config import cloud_region
+from openstack.config import defaults as config_defaults
+from openstack import connection
 from osc_lib import utils
-
-from cyborgclient.i18n import _
 
 LOG = logging.getLogger(__name__)
 
-DEFAULT_ACCELERATOR_API_VERSION = '1'
+DEFAULT_ACCELERATOR_API_VERSION = '2'
 API_VERSION_OPTION = 'os_accelerator_api_version'
 API_NAME = 'accelerator'
-API_VERSIONS = {
-    '1': 'cyborgclient.v1.client.Client',
-}
+CURRENT_API_VERSION = '2'
+
+
+def _make_key(service_type, key):
+    if not service_type:
+        return key
+    else:
+        service_type = service_type.lower().replace('-', '_')
+        return "_".join([service_type, key])
+
+
+def _get_config_from_profile(profile, **kwargs):
+    # Deal with clients still trying to use legacy profile objects
+    region_name = None
+    for service in profile.get_services():
+        if service.region:
+            region_name = service.region
+        service_type = service.service_type
+        if service.interface:
+            key = _make_key(service_type, 'interface')
+            kwargs[key] = service.interface
+        if service.version:
+            version = service.version
+            if version.startswith('v'):
+                version = version[2:]
+            key = _make_key(service_type, 'api_version')
+            kwargs[key] = version
+        if service.api_version:
+            version = service.api_version
+            key = _make_key(service_type, 'default_microversion')
+            kwargs[key] = version
+
+    config_kwargs = config_defaults.get_defaults()
+    config_kwargs.update(kwargs)
+    config = cloud_region.CloudRegion(
+        region_name=region_name, config=config_kwargs)
+    return config
+
+
+def create_connection(prof=None, cloud_region=None, **kwargs):
+    version_key = _make_key(API_NAME, 'api_version')
+    kwargs[version_key] = CURRENT_API_VERSION
+
+    if not cloud_region:
+        if prof:
+            cloud_region = _get_config_from_profile(prof, **kwargs)
+    else:
+        # If we got the CloudRegion from python-openstackclient and it doesn't
+        # already have a default microversion set, set it here.
+        microversion_key = _make_key(API_NAME, 'default_microversion')
+        cloud_region.config.setdefault(microversion_key, CURRENT_API_VERSION)
+
+    user_agent = kwargs.pop('user_agent', None)
+    app_name = kwargs.pop('app_name', None)
+    app_version = kwargs.pop('app_version', None)
+    if user_agent is not None and (not app_name and not app_version):
+        app_name, app_version = user_agent.split('/', 1)
+
+    return connection.Connection(
+        config=cloud_region,
+        app_name=app_name,
+        app_version=app_version, **kwargs)
 
 
 def make_client(instance):
-    """Returns an accelerators service client"""
-    cyborg_client = utils.get_client_class(
-        API_NAME,
-        instance._api_version[API_NAME],
-        API_VERSIONS)
-    LOG.debug('Instantiating accelerators client: %s', cyborg_client)
-
-    endpoint = instance.get_endpoint_for_service_type(
-        API_NAME,
-        region_name=instance.region_name,
-        interface=instance.interface,
+    """Returns a accelerator proxy"""
+    conn = create_connection(
+        cloud_region=instance._cli_options,
     )
 
-    kwargs = {'endpoint': endpoint,
-              'auth_url': instance.auth.auth_url,
-              'region_name': instance.region_name,
-              'username': instance.auth_ref.username}
-
-    if instance.session:
-        kwargs.update(session=instance.session)
-    else:
-        kwargs.update(token=instance.auth_ref.auth_token)
-
-    client = cyborg_client(**kwargs)
-
-    return client
+    LOG.debug('Connection: %s', conn)
+    LOG.debug('Accelerator client initialized using OpenStackSDK: %s',
+              conn.accelerator)
+    return conn.accelerator
 
 
 def build_option_parser(parser):
@@ -66,8 +109,7 @@ def build_option_parser(parser):
         default=utils.env(
             'OS_ACCELERATOR_API_VERSION',
             default=DEFAULT_ACCELERATOR_API_VERSION),
-        help=(_('Accelerations compute API version, default=%s '
-                '(Env: OS_ACCELERATOR_API_VERSION)') %
-              DEFAULT_ACCELERATOR_API_VERSION)
-    )
+        help='Accelerator API version, default=' +
+             DEFAULT_ACCELERATOR_API_VERSION +
+             ' (Env: OS_ACCELERATOR_API_VERSION)')
     return parser
