@@ -14,11 +14,11 @@
 #
 import logging
 
+from oslo_serialization import jsonutils
+
 from cyborgclient import exceptions as exc
 
 LOG = logging.getLogger(__name__)
-
-from oslo_serialization import jsonutils
 
 
 def common_filters(marker=None, limit=None, sort_key=None, sort_dir=None):
