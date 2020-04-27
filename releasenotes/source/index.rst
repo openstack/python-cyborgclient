@@ -8,4 +8,5 @@
    unreleased
    ussuri
    train
+   stein
    rocky
