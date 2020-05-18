@@ -40,9 +40,9 @@ project = u'python-cyborgclient'
 copyright = u'2017, OpenStack Developers'
 
 # openstackdocstheme options
-repository_name = 'openstack/python-cyborgclient'
-bug_project = 'https://bugs.launchpad.net/python-cyborgclient'
-bug_tag = ''
+openstackdocs_repo_name = 'openstack/python-cyborgclient'
+openstackdocs_bug_project = 'https://bugs.launchpad.net/python-cyborgclient'
+openstackdocs_bug_tag = ''
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 add_function_parentheses = True
@@ -52,7 +52,7 @@ add_function_parentheses = True
 add_module_names = True
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'native'
 
 # -- Options for HTML output --------------------------------------------------
 
