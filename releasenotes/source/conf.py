@@ -55,8 +55,7 @@ copyright = u'2017, OpenStack Developers'
 
 # openstackdocstheme options
 openstackdocs_repo_name = 'openstack/python-cyborgclient'
-openstackdocs_bug_project = 'https://bugs.launchpad.net/python-cyborgclient'
-openstackdocs_bug_tag = ''
+openstackdocs_use_storyboard = True
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -41,8 +41,7 @@ copyright = u'2017, OpenStack Developers'
 
 # openstackdocstheme options
 openstackdocs_repo_name = 'openstack/python-cyborgclient'
-openstackdocs_bug_project = 'https://bugs.launchpad.net/python-cyborgclient'
-openstackdocs_bug_tag = ''
+openstackdocs_use_storyboard = True
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 add_function_parentheses = True
