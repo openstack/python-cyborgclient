@@ -154,7 +154,7 @@ class ProgramDeployable(command.ShowOne):
             raise exc.CommandError(_('deployable not found: %s') % dep_uuid)
 
         image_uuid = parsed_args.image_uuid
-        image_client = self.app.client_manager.image.images
+        image_client = self.app.client_manager.image
         try:
             image_client.get(image_uuid)
         except sdk_exc.ResourceNotFound:
