@@ -12,8 +12,8 @@
 #
 
 from cyborgclient.tests.unit.osc import fakes
-import mock
 from osc_lib.tests import utils
+from unittest import mock
 import uuid
 
 deployable_created_at = '2019-06-24T00:00:00.000000+00:00'
