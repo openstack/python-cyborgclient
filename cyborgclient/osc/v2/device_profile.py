@@ -92,7 +92,10 @@ class CreateDeviceProfile(command.ShowOne):
         parser.add_argument(
             'groups',
             metavar='<groups>',
-            help=_("groups for the device_profile."))
+            help=_("""groups for the device_profile.
+                   e.g. '[{"resources:<type>":1,
+                   "trait:CUSTOM_<type>_<product_id>": "required",
+                   "trait:CUSTOM_<type>_<vendor>": "required"}]'"""))
         return parser
 
     def take_action(self, parsed_args):
