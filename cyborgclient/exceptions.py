@@ -488,7 +488,7 @@ def from_response(response, method, url, message=None, traceback=None):
                     # message key to the body that has the message and details.
                     error = body.get(list(body)[0])
                     # NOTE(liusheng): the response.json() may like this:
-                    # {u'error_message': u'{"debuginfo": null, "faultcode":
+                    # {'error_message': '{"debuginfo": null, "faultcode":
                     # "Client", "faultstring": "error message"}'}, the
                     # "error_message" in the body is also a json string.
                     if isinstance(error, str):
