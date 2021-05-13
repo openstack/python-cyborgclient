@@ -15,11 +15,20 @@ Contents:
    readme
    install/index
    library/index
-   contributor/index
    cli/index
    user/index
    admin/index
    reference/index
+
+For Contributors
+================
+
+* If you are a new contributor to python-cyborgclient please refer: :doc:`contributor/contributing`
+
+  .. toctree::
+     :hidden:
+
+     contributor/contributing
 
 Indices and tables
 ==================
