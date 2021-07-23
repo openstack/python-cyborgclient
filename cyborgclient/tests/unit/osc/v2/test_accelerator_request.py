@@ -12,6 +12,9 @@
 #
 import copy
 
+from openstack import exceptions as sdk_exc
+
+from cyborgclient import exceptions as exc
 from cyborgclient.osc.v2 import accelerator_request as osc_accelerator_request
 from cyborgclient.tests.unit.osc.v2 import fakes as acc_fakes
 
@@ -102,3 +105,26 @@ class TestAcceleratorRequestList(TestAcceleratorRequest):
             acc_fakes.accelerator_request_attach_handle_info,
         ), ]
         self.assertEqual(datalist, list(data))
+
+
+class TestAcceleratorRequestDelete(TestAcceleratorRequest):
+
+    def setUp(self):
+        super(TestAcceleratorRequestDelete, self).setUp()
+        self.cmd = osc_accelerator_request.DeleteAcceleratorRequest(
+            self.app, None
+        )
+
+    def test_accelerator_request_delete_non_existed(self):
+        self.mock_acc_client.delete_accelerator_request.side_effect = \
+            sdk_exc.ResourceNotFound
+
+        arg_list = [acc_fakes.accelerator_request_uuid]
+        verify_list = []
+        parsed_args = self.check_parser(self.cmd, arg_list, verify_list)
+        result = self.assertRaises(exc.ClientException,
+                                   self.cmd.take_action,
+                                   parsed_args)
+        self.assertIn("No accelerator_request with UUID " +
+                      acc_fakes.accelerator_request_uuid + " exists",
+                      str(result))

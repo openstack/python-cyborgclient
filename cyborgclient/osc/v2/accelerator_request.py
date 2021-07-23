@@ -158,6 +158,9 @@ class DeleteAcceleratorRequest(command.Command):
             try:
                 acc_client.delete_accelerator_request(uuid, False)
                 print(_('Deleted accelerator_request %s') % uuid)
+            except sdk_exc.ResourceNotFound:
+                failures.append(_("No accelerator_request with UUID %s "
+                                  "exists.") % uuid)
             except exc.ClientException as e:
                 failures.append(_("Failed to delete accelerator_request\
                                 %(accelerator_request)s: %(error)s")
