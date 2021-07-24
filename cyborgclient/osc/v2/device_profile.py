@@ -20,6 +20,7 @@ from openstack import exceptions as sdk_exc
 from osc_lib.command import command
 from osc_lib import utils as oscutils
 from oslo_serialization import jsonutils
+from oslo_utils import uuidutils
 
 from cyborgclient.common import utils
 from cyborgclient import exceptions as exc
@@ -166,6 +167,10 @@ class ShowDeviceProfile(command.ShowOne):
 
 def _show_device_profile(acc_client, uuid):
     """Show detailed info about device_profile."""
+    if not uuidutils.is_uuid_like(uuid):
+        raise exc.CommandError(_('Only UUID of device_profile allowed. '
+                               'Invalid input: %s') % uuid)
+
     columns = (
         "created_at",
         "updated_at",
