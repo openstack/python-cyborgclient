@@ -97,6 +97,10 @@ class CreateDeviceProfile(command.ShowOne):
                    e.g. '[{"resources:<type>":1,
                    "trait:CUSTOM_<type>_<product_id>": "required",
                    "trait:CUSTOM_<type>_<vendor>": "required"}]'"""))
+        parser.add_argument(
+            '--description',
+            metavar='<description>',
+            help=_("Description for the device_profile(optional)."))
         return parser
 
     def take_action(self, parsed_args):
@@ -106,6 +110,7 @@ class CreateDeviceProfile(command.ShowOne):
         attrs = {
             'name': parsed_args.name,
             'groups': list(jsonutils.loads(parsed_args.groups)),
+            'description': parsed_args.description
         }
         device_profile = acc_client.create_device_profile(**attrs)
         return _show_device_profile(acc_client, device_profile.uuid)

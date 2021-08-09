@@ -106,3 +106,44 @@ class TestDeviceProfileShow(TestDeviceProfile):
                                    parsed_args)
         self.assertIn("Only UUID of device_profile allowed. "
                       "Invalid input: fake_devprof_name", str(result))
+
+
+class TestDeviceProfileCreate(TestDeviceProfile):
+
+    def setUp(self):
+        super(TestDeviceProfileCreate, self).setUp()
+
+        fake_dp = acc_fakes.FakeAcceleratorResource(
+            None,
+            copy.deepcopy(acc_fakes.DEVICE_PROFILE),
+            loaded=True)
+        self.mock_acc_client.create_device_profile.return_value = fake_dp
+        self.mock_acc_client.get_device_profile.return_value = fake_dp
+        self.cmd = osc_device_profile.CreateDeviceProfile(self.app, None)
+
+    def test_device_profile_create(self):
+        arglist = ['test', '[]']
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+        kwargs = {'name': 'test', 'groups': [], 'description': None}
+
+        self.mock_acc_client.create_device_profile.assert_called_with(**kwargs)
+
+        collist = (
+            'created_at',
+            'updated_at',
+            'uuid',
+            'name',
+            'groups',
+        )
+        self.assertEqual(collist, columns)
+
+        datalist = [
+            acc_fakes.device_profile_created_at,
+            acc_fakes.device_profile_updated_at,
+            acc_fakes.device_profile_uuid,
+            acc_fakes.device_profile_name,
+            acc_fakes.device_profile_groups,
+        ]
+        self.assertEqual(datalist, list(data))
