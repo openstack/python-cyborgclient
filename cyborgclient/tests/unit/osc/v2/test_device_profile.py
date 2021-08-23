@@ -12,6 +12,7 @@
 #
 import copy
 
+from cyborgclient import exceptions as exc
 from cyborgclient.osc.v2 import device_profile as osc_device_profile
 from cyborgclient.tests.unit.osc.v2 import fakes as acc_fakes
 
@@ -88,3 +89,20 @@ class TestDeviceProfileList(TestDeviceProfile):
             acc_fakes.device_profile_groups,
         ), ]
         self.assertEqual(datalist, list(data))
+
+
+class TestDeviceProfileShow(TestDeviceProfile):
+
+    def setUp(self):
+        super(TestDeviceProfileShow, self).setUp()
+        self.cmd = osc_device_profile.ShowDeviceProfile(self.app, None)
+
+    def test_device_profile_show_with_name(self):
+        arg_list = [acc_fakes.device_profile_name]
+        verify_list = []
+        parsed_args = self.check_parser(self.cmd, arg_list, verify_list)
+        result = self.assertRaises(exc.CommandError,
+                                   self.cmd.take_action,
+                                   parsed_args)
+        self.assertIn("Only UUID of device_profile allowed. "
+                      "Invalid input: fake_devprof_name", str(result))
