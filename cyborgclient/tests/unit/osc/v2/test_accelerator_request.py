@@ -128,3 +128,56 @@ class TestAcceleratorRequestDelete(TestAcceleratorRequest):
         self.assertIn("No accelerator_request with UUID " +
                       acc_fakes.accelerator_request_uuid + " exists",
                       str(result))
+
+
+class TestAcceleratorRequestCreate(TestAcceleratorRequest):
+
+    def setUp(self):
+        super(TestAcceleratorRequestCreate, self).setUp()
+
+        fake_arq = acc_fakes.FakeAcceleratorResource(
+            None,
+            copy.deepcopy(acc_fakes.ACCELERATOR_REQUEST),
+            loaded=True)
+        self.mock_acc_client.create_accelerator_request.return_value = fake_arq
+        self.mock_acc_client.get_accelerator_request.return_value = fake_arq
+
+        self.cmd = osc_accelerator_request.CreateAcceleratorRequest(
+            self.app, None
+        )
+
+    def test_accelerator_request_create(self):
+        arglist = ["dp_name"]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+        kwargs = {'device_profile_name': 'dp_name',
+                  'device_profile_group_id': None,
+                  'image_uuid': None}
+
+        self.mock_acc_client.create_accelerator_request.assert_called_with(
+            **kwargs)
+
+        collist = (
+            'uuid',
+            'state',
+            'device_profile_name',
+            'hostname',
+            'device_rp_uuid',
+            'instance_uuid',
+            'attach_handle_type',
+            'attach_handle_info',
+        )
+        self.assertEqual(collist, columns)
+
+        datalist = [
+            acc_fakes.accelerator_request_uuid,
+            acc_fakes.accelerator_request_state,
+            acc_fakes.accelerator_request_device_profile_name,
+            acc_fakes.accelerator_request_hostname,
+            acc_fakes.accelerator_request_device_rp_uuid,
+            acc_fakes.accelerator_request_instance_uuid,
+            acc_fakes.accelerator_request_attach_handle_type,
+            acc_fakes.accelerator_request_attach_handle_info,
+        ]
+        self.assertEqual(datalist, list(data))
