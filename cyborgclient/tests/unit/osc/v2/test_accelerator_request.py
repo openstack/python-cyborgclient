@@ -181,3 +181,63 @@ class TestAcceleratorRequestCreate(TestAcceleratorRequest):
             acc_fakes.accelerator_request_attach_handle_info,
         ]
         self.assertEqual(datalist, list(data))
+
+
+class TestAcceleratorRequestShow(TestAcceleratorRequest):
+
+    def setUp(self):
+        super(TestAcceleratorRequestShow, self).setUp()
+
+        fake_arq = acc_fakes.FakeAcceleratorResource(
+            None,
+            copy.deepcopy(acc_fakes.ACCELERATOR_REQUEST),
+            loaded=True)
+        self.mock_acc_client.get_accelerator_request.return_value = fake_arq
+        self.cmd = osc_accelerator_request.ShowAcceleratorRequest(
+            self.app, None
+        )
+
+    def test_accelerator_request_get(self):
+        arglist = [acc_fakes.accelerator_request_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+
+        self.mock_acc_client.get_accelerator_request.assert_called_with(
+            acc_fakes.accelerator_request_uuid)
+
+        collist = (
+            'uuid',
+            'state',
+            'device_profile_name',
+            'hostname',
+            'device_rp_uuid',
+            'instance_uuid',
+            'attach_handle_type',
+            'attach_handle_info',
+        )
+        self.assertEqual(collist, columns)
+
+        datalist = [
+            acc_fakes.accelerator_request_uuid,
+            acc_fakes.accelerator_request_state,
+            acc_fakes.accelerator_request_device_profile_name,
+            acc_fakes.accelerator_request_hostname,
+            acc_fakes.accelerator_request_device_rp_uuid,
+            acc_fakes.accelerator_request_instance_uuid,
+            acc_fakes.accelerator_request_attach_handle_type,
+            acc_fakes.accelerator_request_attach_handle_info,
+        ]
+        self.assertEqual(datalist, list(data))
+
+    def test_accelerator_request_get_not_exist(self):
+        get_arq_req = self.mock_acc_client.get_accelerator_request
+        get_arq_req.side_effect = sdk_exc.ResourceNotFound
+        arglist = [acc_fakes.accelerator_request_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.assertRaisesRegex(
+            exc.CommandError,
+            'accelerator_request not found: ' +
+            acc_fakes.accelerator_request_uuid,
+            self.cmd.take_action, parsed_args)
