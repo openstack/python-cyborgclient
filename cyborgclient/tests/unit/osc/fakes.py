@@ -56,3 +56,6 @@ class FakeResource(object):
                           k != 'manager')
         info = ", ".join("%s=%s" % (k, getattr(self, k)) for k in reprkeys)
         return "<%s %s>" % (self.__class__.__name__, info)
+
+    def to_dict(self):
+        return dict(self.__dict__)

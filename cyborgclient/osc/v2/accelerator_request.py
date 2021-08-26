@@ -103,8 +103,9 @@ class CreateAcceleratorRequest(command.ShowOne):
             metavar='<device_profile_name>',
             help=_("The name of device_profile for accelerator_request."))
         parser.add_argument(
-            'device_profile_group_id',
+            '--group-id',
             metavar='<device_profile_group_id>',
+            dest='group_id',
             help=_("The group id of device_profile \
                    for the accelerator_request."))
         parser.add_argument(
@@ -122,7 +123,7 @@ class CreateAcceleratorRequest(command.ShowOne):
 
         attrs = {
             'device_profile_name': parsed_args.device_profile_name,
-            'device_profile_group_id': parsed_args.device_profile_group_id,
+            'device_profile_group_id': parsed_args.group_id,
             'image_uuid': parsed_args.img_uuid,
         }
 
