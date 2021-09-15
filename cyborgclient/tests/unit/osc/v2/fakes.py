@@ -76,6 +76,7 @@ device_profile_groups = [
      "trait:CUSTOM_TRAIT_ALWAYS": "required",
      }
 ]
+device_profile_description = 'fake_description'
 
 DEVICE_PROFILE = {
     'created_at': device_profile_created_at,
@@ -84,6 +85,7 @@ DEVICE_PROFILE = {
     'uuid': device_profile_uuid,
     'name': device_profile_name,
     'groups': device_profile_groups,
+    'description': device_profile_description,
 }
 
 accelerator_request_uuid = uuid.uuid4().hex
