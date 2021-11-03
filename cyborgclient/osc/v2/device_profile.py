@@ -50,25 +50,29 @@ class ListDeviceProfile(command.Lister):
                 "updated_at",
                 "uuid",
                 "name",
-                "groups"
+                "groups",
+                "description"
             )
             columns = (
                 "created_at",
                 "updated_at",
                 "uuid",
                 "name",
-                "groups"
+                "groups",
+                "description"
             )
         else:
             column_headers = (
                 "uuid",
                 "name",
                 "groups",
+                "description"
             )
             columns = (
                 "uuid",
                 "name",
                 "groups",
+                "description"
             )
 
         data = acc_client.device_profiles()
@@ -182,6 +186,7 @@ def _show_device_profile(acc_client, uuid):
         "uuid",
         "name",
         "groups",
+        "description",
     )
     try:
         device_profile = acc_client.get_device_profile(uuid)

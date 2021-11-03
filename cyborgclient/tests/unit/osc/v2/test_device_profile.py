@@ -53,6 +53,7 @@ class TestDeviceProfileList(TestDeviceProfile):
             'uuid',
             'name',
             'groups',
+            'description'
         )
         self.assertEqual(collist, columns)
 
@@ -60,6 +61,7 @@ class TestDeviceProfileList(TestDeviceProfile):
             acc_fakes.device_profile_uuid,
             acc_fakes.device_profile_name,
             acc_fakes.device_profile_groups,
+            acc_fakes.device_profile_description,
         ), ]
         self.assertEqual(datalist, list(data))
 
@@ -78,6 +80,7 @@ class TestDeviceProfileList(TestDeviceProfile):
             'uuid',
             'name',
             'groups',
+            'description'
         )
         self.assertEqual(collist, columns)
 
@@ -87,6 +90,7 @@ class TestDeviceProfileList(TestDeviceProfile):
             acc_fakes.device_profile_uuid,
             acc_fakes.device_profile_name,
             acc_fakes.device_profile_groups,
+            acc_fakes.device_profile_description,
         ), ]
         self.assertEqual(datalist, list(data))
 
@@ -136,6 +140,7 @@ class TestDeviceProfileCreate(TestDeviceProfile):
             'uuid',
             'name',
             'groups',
+            'description'
         )
         self.assertEqual(collist, columns)
 
@@ -145,5 +150,6 @@ class TestDeviceProfileCreate(TestDeviceProfile):
             acc_fakes.device_profile_uuid,
             acc_fakes.device_profile_name,
             acc_fakes.device_profile_groups,
+            acc_fakes.device_profile_description,
         ]
         self.assertEqual(datalist, list(data))
