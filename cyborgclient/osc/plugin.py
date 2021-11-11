@@ -75,7 +75,8 @@ def create_connection(prof=None, cloud_region=None, **kwargs):
         # If we got the CloudRegion from python-openstackclient and it doesn't
         # already have a default microversion set, set it here.
         microversion_key = _make_key(API_NAME, 'default_microversion')
-        cloud_region.config.setdefault(microversion_key, CURRENT_API_VERSION)
+        api_version = kwargs.get('api_version', CURRENT_API_VERSION)
+        cloud_region.config.setdefault(microversion_key, api_version)
 
     user_agent = kwargs.pop('user_agent', None)
     app_name = kwargs.pop('app_name', None)
@@ -93,6 +94,7 @@ def make_client(instance):
     """Returns a accelerator proxy"""
     conn = create_connection(
         cloud_region=instance._cli_options,
+        api_version=instance._api_version[API_NAME]
     )
 
     LOG.debug('Connection: %s', conn)

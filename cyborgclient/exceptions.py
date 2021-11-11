@@ -224,7 +224,7 @@ class NotAcceptable(HTTPClientError):
     acceptable according to the Accept headers sent in the request.
     """
     status_code = 406
-    message = _("Not Acceptable")
+    message = _("Not Acceptable %(message)s")
 
 
 class ProxyAuthenticationRequired(HTTPClientError):

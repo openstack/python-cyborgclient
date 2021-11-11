@@ -20,7 +20,6 @@ from openstack import exceptions as sdk_exc
 from osc_lib.command import command
 from osc_lib import utils as oscutils
 from oslo_serialization import jsonutils
-from oslo_utils import uuidutils
 
 from cyborgclient.common import utils
 from cyborgclient import exceptions as exc
@@ -162,8 +161,10 @@ class ShowDeviceProfile(command.ShowOne):
         parser = super(ShowDeviceProfile, self).get_parser(prog_name)
         parser.add_argument(
             "device_profile",
-            metavar="<uuid>",
-            help=_("UUID of the device_profile.")
+            metavar="<device_profile>",
+            help=_("Name or UUID of the device_profile."
+                   " The name field requires at least"
+                   " ``--os-accelerator-api-version 2.2``.")
         )
         return parser
 
@@ -174,11 +175,8 @@ class ShowDeviceProfile(command.ShowOne):
                                     parsed_args.device_profile)
 
 
-def _show_device_profile(acc_client, uuid):
+def _show_device_profile(acc_client, name_or_uuid):
     """Show detailed info about device_profile."""
-    if not uuidutils.is_uuid_like(uuid):
-        raise exc.CommandError(_('Only UUID of device_profile allowed. '
-                               'Invalid input: %s') % uuid)
 
     columns = (
         "created_at",
@@ -189,12 +187,13 @@ def _show_device_profile(acc_client, uuid):
         "description",
     )
     try:
-        device_profile = acc_client.get_device_profile(uuid)
+        device_profile = acc_client.get_device_profile(name_or_uuid)
     except sdk_exc.ResourceNotFound:
-        raise exc.CommandError(_('device_profile not found: %s') % uuid)
-    formatters = {
-        'data': utils.json_formatter,
-    }
+        raise exc.CommandError(_('device_profile %s not found') % name_or_uuid)
+    except sdk_exc.HttpException as e:
+        raise exc.NotAcceptable(message=e.details)
+
+    formatters = {'data': utils.json_formatter}
     data = device_profile.to_dict()
     return columns, oscutils.get_dict_properties(data, columns,
                                                  formatters=formatters)

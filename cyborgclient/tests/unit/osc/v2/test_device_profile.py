@@ -12,6 +12,10 @@
 #
 import copy
 
+from openstack import exceptions as sdk_exc
+from osc_lib import utils as oscutils
+
+from cyborgclient.common import utils
 from cyborgclient import exceptions as exc
 from cyborgclient.osc.v2 import device_profile as osc_device_profile
 from cyborgclient.tests.unit.osc.v2 import fakes as acc_fakes
@@ -101,15 +105,43 @@ class TestDeviceProfileShow(TestDeviceProfile):
         super(TestDeviceProfileShow, self).setUp()
         self.cmd = osc_device_profile.ShowDeviceProfile(self.app, None)
 
-    def test_device_profile_show_with_name(self):
+    def test_device_profile_show_with_name_before_v22(self):
+        exc_msg = 'The minimal required API version should be 2.2'
+        self.mock_acc_client.get_device_profile.side_effect = \
+            sdk_exc.HttpException(details=exc_msg)
+
         arg_list = [acc_fakes.device_profile_name]
         verify_list = []
         parsed_args = self.check_parser(self.cmd, arg_list, verify_list)
-        result = self.assertRaises(exc.CommandError,
+        result = self.assertRaises(exc.NotAcceptable,
                                    self.cmd.take_action,
                                    parsed_args)
-        self.assertIn("Only UUID of device_profile allowed. "
-                      "Invalid input: fake_devprof_name", str(result))
+        self.assertIn(exc_msg, str(result))
+
+    def test_device_profile_show_with_name(self):
+        fake_dp = acc_fakes.FakeAcceleratorResource(
+            None,
+            copy.deepcopy(acc_fakes.DEVICE_PROFILE),
+            loaded=True)
+        self.mock_acc_client.get_device_profile.return_value = fake_dp
+
+        arg_list = [acc_fakes.device_profile_name]
+        verify_list = []
+        parsed_args = self.check_parser(self.cmd, arg_list, verify_list)
+        result = self.cmd.take_action(parsed_args)
+        columns = (
+            "created_at",
+            "updated_at",
+            "uuid",
+            "name",
+            "groups",
+            "description",
+        )
+        formatters = {'data': utils.json_formatter}
+        expected = oscutils.get_dict_properties(acc_fakes.DEVICE_PROFILE,
+                                                columns,
+                                                formatters=formatters)
+        self.assertEqual(result, (columns, expected))
 
 
 class TestDeviceProfileCreate(TestDeviceProfile):
