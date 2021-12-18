@@ -249,6 +249,13 @@ class BindAcceleratorRequest(command.ShowOne):
             metavar="<device_rp_uuid>",
             help=_("Bind device_rp_uuid of the accelerator request")
         )
+        parser.add_argument(
+            "project_id",
+            metavar="<project_id>",
+            help=_("Bind current user's project_id to the accelerator "
+                   "request. The field requires at least "
+                   "``--os-accelerator-api-version 2.1``.")
+        )
 
         return parser
 
