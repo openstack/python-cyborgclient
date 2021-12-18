@@ -29,6 +29,20 @@ from cyborgclient.i18n import _
 class ListDeviceProfile(command.Lister):
     """List all device profiles"""
 
+    column_headers = (
+        "uuid",
+        "name",
+        "groups",
+        "description"
+    )
+    columns = (
+        "uuid",
+        "name",
+        "groups",
+        "description"
+    )
+    detail_cols = ("created_at", "updated_at")
+
     def get_parser(self, prog_name):
         parser = super(ListDeviceProfile, self).get_parser(prog_name)
         parser.add_argument(
@@ -42,45 +56,17 @@ class ListDeviceProfile(command.Lister):
 
     def take_action(self, parsed_args):
         acc_client = self.app.client_manager.accelerator
-
         if parsed_args.detail:
-            column_headers = (
-                "created_at",
-                "updated_at",
-                "uuid",
-                "name",
-                "groups",
-                "description"
-            )
-            columns = (
-                "created_at",
-                "updated_at",
-                "uuid",
-                "name",
-                "groups",
-                "description"
-            )
-        else:
-            column_headers = (
-                "uuid",
-                "name",
-                "groups",
-                "description"
-            )
-            columns = (
-                "uuid",
-                "name",
-                "groups",
-                "description"
-            )
+            self.column_headers += self.detail_cols
+            self.columns += self.detail_cols
 
         data = acc_client.device_profiles()
         if not data:
             return (), ()
         formatters = {}
-        return (column_headers,
+        return (self.column_headers,
                 (oscutils.get_item_properties(
-                    s, columns, formatters=formatters) for s in data))
+                    s, self.columns, formatters=formatters) for s in data))
 
 
 class CreateDeviceProfile(command.ShowOne):

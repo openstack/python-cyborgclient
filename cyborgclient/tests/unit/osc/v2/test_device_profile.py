@@ -78,23 +78,17 @@ class TestDeviceProfileList(TestDeviceProfile):
 
         self.mock_acc_client.device_profiles.assert_called_with(**kwargs)
 
-        collist = (
-            'created_at',
-            'updated_at',
-            'uuid',
-            'name',
-            'groups',
-            'description'
-        )
-        self.assertEqual(collist, columns)
+        collist = (osc_device_profile.ListDeviceProfile.columns +
+                   osc_device_profile.ListDeviceProfile.detail_cols)
+        self.assertEqual(list(collist), list(columns))
 
         datalist = [(
-            acc_fakes.device_profile_created_at,
-            acc_fakes.device_profile_updated_at,
             acc_fakes.device_profile_uuid,
             acc_fakes.device_profile_name,
             acc_fakes.device_profile_groups,
             acc_fakes.device_profile_description,
+            acc_fakes.device_profile_created_at,
+            acc_fakes.device_profile_updated_at,
         ), ]
         self.assertEqual(datalist, list(data))
 
