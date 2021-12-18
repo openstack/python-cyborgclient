@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Add support for microversion 2.2, which can show device profile by name,
+    like this:
+    ``openstack --os-accelerator-api-version 2.2 accelerator device profile show <device_profile>``
