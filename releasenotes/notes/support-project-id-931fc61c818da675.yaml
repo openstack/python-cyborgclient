@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Add support for microversion 2.1, when apply arq patch, ``project_id`` of
+    current user can be saved in arq, which can forbidden other user to
+    operate the arq, like this:
+    ``openstack --os-accelerator-api-version 2.1 accelerator arq bind --fileds project_id``
