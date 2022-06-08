@@ -2,5 +2,12 @@
     templates:
       - check-requirements
       - openstackclient-plugin-jobs
-      - openstack-python3-yoga-jobs
       - publish-openstack-docs-pti
+    check:
+      jobs:
+        - openstack-tox-pep8
+        - openstack-tox-py38
+    gate:
+      jobs:
+        - openstack-tox-pep8
+        - openstack-tox-py38
