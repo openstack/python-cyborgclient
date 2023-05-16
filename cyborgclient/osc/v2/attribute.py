@@ -138,6 +138,26 @@ class DeleteAttribute(command.Command):
             raise exc.ClientException("\n".join(failures))
 
 
+class ShowAttribute(command.ShowOne):
+    """Show attribute details."""
+    log = logging.getLogger(__name__ + ".ShowAttribute")
+
+    def get_parser(self, prog_name):
+        parser = super(ShowAttribute, self).get_parser(prog_name)
+        parser.add_argument(
+            "attribute",
+            metavar="<attribute>",
+            help=_("UUID of the attribute.")
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)", parsed_args)
+        acc_client = self.app.client_manager.accelerator
+        return _show_attribute(acc_client,
+                               parsed_args.attribute)
+
+
 def _show_attribute(acc_client, uuid):
     """Show detailed info about device_profile."""
 
