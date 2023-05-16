@@ -14,9 +14,14 @@
 
 """Cyborg v2 Acceleration accelerator action implementations"""
 
+import logging
+
+from openstack import exceptions as sdk_exc
 from osc_lib.command import command
 from osc_lib import utils as oscutils
 
+from cyborgclient.common import utils
+from cyborgclient import exceptions as exc
 from cyborgclient.i18n import _
 
 
@@ -61,3 +66,63 @@ class ListAttribute(command.Lister):
         return (self.column_headers,
                 (oscutils.get_item_properties(
                     s, self.columns, formatters=formatters) for s in data))
+
+
+class CreateAttribute(command.ShowOne):
+    """Register a new attribute with the accelerator service"""
+    log = logging.getLogger(__name__ + ".CreateAttribute")
+
+    def get_parser(self, prog_name):
+        parser = super(CreateAttribute, self).get_parser(prog_name)
+        parser.add_argument(
+            'deployable_id',
+            metavar='<deployable_id>',
+            help=_("Deployable_id for the attribute."))
+        parser.add_argument(
+            'key',
+            metavar='<key>',
+            help=_("""Key for the attribute.
+                   e.g. '[{"resources:<type>":1,
+                   "trait:CUSTOM_<type>_<product_id>": "required",
+                   "trait:CUSTOM_<type>_<vendor>": "required"}]'"""))
+        parser.add_argument(
+            'value',
+            metavar='<value>',
+            help=_("Value for the attribute."))
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)", parsed_args)
+        acc_client = self.app.client_manager.accelerator
+
+        attrs = {
+            'deployable_id': parsed_args.deployable_id,
+            'key': parsed_args.key,
+            'value': parsed_args.value
+        }
+        attribute = acc_client.create_attribute(**attrs)
+        return _show_attribute(acc_client, attribute.uuid)
+
+
+def _show_attribute(acc_client, uuid):
+    """Show detailed info about device_profile."""
+
+    columns = (
+        "created_at",
+        "updated_at",
+        "uuid",
+        "deployable_id",
+        "key",
+        "value",
+    )
+    try:
+        attribute = acc_client.get_attribute(uuid)
+    except sdk_exc.ResourceNotFound:
+        raise exc.CommandError(_('Attribute %s not found') % uuid)
+    except sdk_exc.HttpException as e:
+        raise exc.NotAcceptable(message=e.details)
+
+    formatters = {'data': utils.json_formatter}
+    data = attribute.to_dict()
+    return columns, oscutils.get_dict_properties(data, columns,
+                                                 formatters=formatters)
