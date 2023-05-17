@@ -108,6 +108,24 @@ ACCELERATOR_REQUEST = {
     'attach_handle_info': accelerator_request_attach_handle_info,
 }
 
+attribute_created_at = '2023-05-17T00:00:00.000000+00:00'
+attribute_updated_at = '2023-05-17T11:11:11.111111+11:11'
+attribute_id = 1
+attribute_uuid = uuid.uuid4().hex
+attribute_deployable_id = 'fake_attribute_name'
+attribute_key = 'traits1'
+attribute_value = 'CUSTOM_FAKE_DEVICE'
+
+ATTRIBUTE = {
+    'created_at': attribute_created_at,
+    'updated_at': attribute_updated_at,
+    'id': attribute_id,
+    'uuid': attribute_uuid,
+    'deployable_id': attribute_deployable_id,
+    'key': attribute_key,
+    'value': attribute_value,
+}
+
 
 class TestAccelerator(utils.TestCommand):
 
