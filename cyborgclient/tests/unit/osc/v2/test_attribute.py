@@ -86,3 +86,48 @@ class TestAttributeList(TestAttribute):
             acc_fakes.attribute_updated_at,
         ), ]
         self.assertEqual(datalist, list(data))
+
+
+class TestAttributeCreate(TestAttribute):
+
+    def setUp(self):
+        super(TestAttributeCreate, self).setUp()
+
+        fake_arq = acc_fakes.FakeAcceleratorResource(
+            None,
+            copy.deepcopy(acc_fakes.ATTRIBUTE),
+            loaded=True)
+        self.mock_acc_client.create_attribute.return_value = fake_arq
+        self.mock_acc_client.get_attribute.return_value = fake_arq
+        self.cmd = osc_attribute.CreateAttribute(self.app, None)
+
+    def test_attribute_create(self):
+        arglist = ['1', 'traits1', 'CUSTOM_FAKE_DEVICE']
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+        kwargs = {'deployable_id': '1',
+                  'key': 'traits1', 'value': 'CUSTOM_FAKE_DEVICE'}
+
+        self.mock_acc_client.create_attribute.assert_called_with(**kwargs)
+
+        collist = (
+            "created_at",
+            "updated_at",
+            "uuid",
+            "deployable_id",
+            "key",
+            "value",
+        )
+
+        self.assertEqual(collist, columns)
+
+        datalist = [
+            acc_fakes.attribute_created_at,
+            acc_fakes.attribute_updated_at,
+            acc_fakes.attribute_uuid,
+            acc_fakes.attribute_deployable_id,
+            acc_fakes.attribute_key,
+            acc_fakes.attribute_value,
+        ]
+        self.assertEqual(datalist, list(data))
