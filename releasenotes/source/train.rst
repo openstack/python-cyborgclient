@@ -1,6 +1,6 @@
-===========================
- Train Series Release Notes
-===========================
+==========================
+Train Series Release Notes
+==========================
 
  .. release-notes::
     :branch: stable/train
