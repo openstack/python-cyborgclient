@@ -174,3 +174,20 @@ class TestAttributeShow(TestAttribute):
             acc_fakes.attribute_value,
         ]
         self.assertEqual(datalist, list(data))
+
+
+class TestAttributeDelete(TestAttribute):
+
+    def setUp(self):
+        super(TestAttributeDelete, self).setUp()
+        self.cmd = osc_attribute.DeleteAttribute(self.app, None)
+
+    def test_attribute_delete(self):
+
+        arglist = [acc_fakes.attribute_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.cmd.take_action(parsed_args)
+
+        self.mock_acc_client.delete_attribute.assert_called_with(
+            acc_fakes.attribute_uuid, False)
