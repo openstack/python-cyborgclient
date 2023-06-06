@@ -179,3 +179,20 @@ class TestDeviceProfileCreate(TestDeviceProfile):
             acc_fakes.device_profile_description,
         ]
         self.assertEqual(datalist, list(data))
+
+
+class TestDeviceProfileDelete(TestDeviceProfile):
+
+    def setUp(self):
+        super(TestDeviceProfileDelete, self).setUp()
+        self.cmd = osc_device_profile.DeleteDeviceProfile(self.app, None)
+
+    def test_device_profile_delete(self):
+
+        arglist = [acc_fakes.device_profile_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.cmd.take_action(parsed_args)
+
+        self.mock_acc_client.delete_device_profile.assert_called_with(
+            acc_fakes.device_profile_uuid, False)
