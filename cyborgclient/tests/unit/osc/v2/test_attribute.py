@@ -131,3 +131,46 @@ class TestAttributeCreate(TestAttribute):
             acc_fakes.attribute_value,
         ]
         self.assertEqual(datalist, list(data))
+
+
+class TestAttributeShow(TestAttribute):
+
+    def setUp(self):
+        super(TestAttributeShow, self).setUp()
+
+        fake_arq = acc_fakes.FakeAcceleratorResource(
+            None,
+            copy.deepcopy(acc_fakes.ATTRIBUTE),
+            loaded=True)
+        self.mock_acc_client.get_attribute.return_value = fake_arq
+        self.cmd = osc_attribute.ShowAttribute(self.app, None)
+
+    def test_attribute_get(self):
+        arglist = [acc_fakes.attribute_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+
+        self.mock_acc_client.get_attribute.assert_called_with(
+            acc_fakes.attribute_uuid)
+
+        collist = (
+            "created_at",
+            "updated_at",
+            "uuid",
+            "deployable_id",
+            "key",
+            "value",
+        )
+
+        self.assertEqual(collist, columns)
+
+        datalist = [
+            acc_fakes.attribute_created_at,
+            acc_fakes.attribute_updated_at,
+            acc_fakes.attribute_uuid,
+            acc_fakes.attribute_deployable_id,
+            acc_fakes.attribute_key,
+            acc_fakes.attribute_value,
+        ]
+        self.assertEqual(datalist, list(data))
