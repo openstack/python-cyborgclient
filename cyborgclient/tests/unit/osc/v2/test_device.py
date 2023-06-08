@@ -100,3 +100,52 @@ class TestDeviceList(TestDevice):
             acc_fakes.device_vendor_board_info,
         ), ]
         self.assertEqual(datalist, list(data))
+
+
+class TestDeviceShow(TestDevice):
+
+    def setUp(self):
+        super(TestDeviceShow, self).setUp()
+
+        fake_arq = acc_fakes.FakeAcceleratorResource(
+            None,
+            copy.deepcopy(acc_fakes.DEVICE),
+            loaded=True)
+        self.mock_acc_client.get_device.return_value = fake_arq
+        self.cmd = osc_device.ShowDevice(self.app, None)
+
+    def test_device_show(self):
+        arglist = [acc_fakes.device_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+
+        self.mock_acc_client.get_device.assert_called_with(
+            acc_fakes.device_uuid)
+
+        collist = (
+            'created_at',
+            'updated_at',
+            'uuid',
+            'type',
+            'vendor',
+            'model',
+            'hostname',
+            'std_board_info',
+            'vendor_board_info'
+        )
+
+        self.assertEqual(collist, columns)
+
+        datalist = [
+            acc_fakes.device_created_at,
+            acc_fakes.device_updated_at,
+            acc_fakes.device_uuid,
+            acc_fakes.device_type,
+            acc_fakes.device_vendor,
+            acc_fakes.device_model,
+            acc_fakes.device_hostname,
+            acc_fakes.device_std_board_info,
+            acc_fakes.device_vendor_board_info,
+        ]
+        self.assertEqual(datalist, list(data))
