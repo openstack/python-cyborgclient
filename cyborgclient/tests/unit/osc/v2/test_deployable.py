@@ -94,3 +94,42 @@ class TestDeployableList(TestDeployable):
             acc_fakes.deployable_device_id,
         ), ]
         self.assertEqual(datalist, list(data))
+
+
+class TestDeployableShow(TestDeployable):
+
+    def setUp(self):
+        super(TestDeployableShow, self).setUp()
+
+        fake_arq = acc_fakes.FakeAcceleratorResource(
+            None,
+            copy.deepcopy(acc_fakes.DEPLOYABLE),
+            loaded=True)
+        self.mock_acc_client.get_deployable.return_value = fake_arq
+        self.cmd = osc_deployable.ShowDeployable(self.app, None)
+
+    def test_deployable_show(self):
+        arglist = [acc_fakes.deployable_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+
+        self.mock_acc_client.get_deployable.assert_called_with(
+            acc_fakes.deployable_uuid)
+
+        collist = (
+            'created_at',
+            'updated_at',
+            'uuid',
+            'name'
+        )
+
+        self.assertEqual(collist, columns)
+
+        datalist = [
+            acc_fakes.deployable_created_at,
+            acc_fakes.deployable_updated_at,
+            acc_fakes.deployable_uuid,
+            acc_fakes.deployable_name
+        ]
+        self.assertEqual(datalist, list(data))
