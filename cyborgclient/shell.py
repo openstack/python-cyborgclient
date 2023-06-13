@@ -31,6 +31,12 @@ from oslo_utils import encodeutils
 from oslo_utils import importutils
 from oslo_utils import strutils
 
+from cyborgclient.common import cliutils
+from cyborgclient import exceptions as exc
+from cyborgclient.i18n import _
+from cyborgclient.v1 import client as client_v1
+from cyborgclient.v1 import shell as shell_v1
+from cyborgclient import version
 
 profiler = importutils.try_import("osprofiler.profiler")
 
@@ -49,13 +55,6 @@ try:
         pass
 except ImportError:
     pass
-
-from cyborgclient.common import cliutils
-from cyborgclient import exceptions as exc
-from cyborgclient.i18n import _
-from cyborgclient.v1 import client as client_v1
-from cyborgclient.v1 import shell as shell_v1
-from cyborgclient import version
 
 LATEST_API_VERSION = ('1', 'latest')
 DEFAULT_INTERFACE = 'public'
