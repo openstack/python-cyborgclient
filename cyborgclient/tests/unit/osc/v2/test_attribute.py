@@ -12,6 +12,9 @@
 #
 import copy
 
+from openstack import exceptions as sdk_exc
+
+from cyborgclient import exceptions as exc
 from cyborgclient.osc.v2 import attribute as osc_attribute
 from cyborgclient.tests.unit.osc.v2 import fakes as acc_fakes
 
@@ -174,6 +177,17 @@ class TestAttributeShow(TestAttribute):
             acc_fakes.attribute_value,
         ]
         self.assertEqual(datalist, list(data))
+
+    def test_attribute_get_not_exist(self):
+        get_arq_req = self.mock_acc_client.get_attribute
+        get_arq_req.side_effect = sdk_exc.ResourceNotFound
+        arglist = [acc_fakes.attribute_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.assertRaisesRegex(
+            exc.CommandError,
+            'Attribute %s not found' % acc_fakes.attribute_uuid,
+            self.cmd.take_action, parsed_args)
 
 
 class TestAttributeDelete(TestAttribute):
