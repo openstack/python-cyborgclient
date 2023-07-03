@@ -12,8 +12,11 @@
 #
 import copy
 
+
+from cyborgclient import exceptions as exc
 from cyborgclient.osc.v2 import device as osc_device
 from cyborgclient.tests.unit.osc.v2 import fakes as acc_fakes
+from openstack import exceptions as sdk_exc
 
 
 class TestDevice(acc_fakes.TestAccelerator):
@@ -149,3 +152,14 @@ class TestDeviceShow(TestDevice):
             acc_fakes.device_vendor_board_info,
         ]
         self.assertEqual(datalist, list(data))
+
+    def test_device_show_not_exist(self):
+        get_arq_req = self.mock_acc_client.get_device
+        get_arq_req.side_effect = sdk_exc.ResourceNotFound
+        arglist = [acc_fakes.device_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.assertRaisesRegex(
+            exc.CommandError,
+            'device not found: %s' % acc_fakes.device_uuid,
+            self.cmd.take_action, parsed_args)
