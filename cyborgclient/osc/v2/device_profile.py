@@ -131,6 +131,8 @@ class DeleteDeviceProfile(command.Command):
             try:
                 acc_client.delete_device_profile(uuid, False)
                 print(_('Deleted device_profile %s') % uuid)
+            except sdk_exc.ResourceNotFound:
+                raise exc.CommandError(_('device_profile %s not found') % uuid)
             except exc.ClientException as e:
                 failures.append(_("Failed to delete device_profile \
                                 %(device_profile)s: %(error)s")

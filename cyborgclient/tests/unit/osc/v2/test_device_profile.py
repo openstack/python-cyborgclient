@@ -207,3 +207,14 @@ class TestDeviceProfileDelete(TestDeviceProfile):
 
         self.mock_acc_client.delete_device_profile.assert_called_with(
             acc_fakes.device_profile_uuid, False)
+
+    def test_device_profile_delete_not_exist(self):
+        get_arq_req = self.mock_acc_client.delete_device_profile
+        get_arq_req.side_effect = sdk_exc.ResourceNotFound
+        arglist = [acc_fakes.device_profile_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.assertRaisesRegex(
+            exc.CommandError,
+            'device_profile %s not found' % acc_fakes.device_profile_uuid,
+            self.cmd.take_action, parsed_args)
