@@ -205,3 +205,14 @@ class TestAttributeDelete(TestAttribute):
 
         self.mock_acc_client.delete_attribute.assert_called_with(
             acc_fakes.attribute_uuid, False)
+
+    def test_attribute_delete_not_exist(self):
+        get_arq_req = self.mock_acc_client.delete_attribute
+        get_arq_req.side_effect = sdk_exc.ResourceNotFound
+        arglist = [acc_fakes.attribute_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.assertRaisesRegex(
+            exc.CommandError,
+            'Attribute %s not found' % acc_fakes.attribute_uuid,
+            self.cmd.take_action, parsed_args)
