@@ -130,6 +130,8 @@ class DeleteAttribute(command.Command):
             try:
                 acc_client.delete_attribute(uuid, False)
                 print(_('Deleted attribute %s') % uuid)
+            except sdk_exc.ResourceNotFound:
+                raise exc.CommandError(_('Attribute %s not found') % uuid)
             except exc.ClientException as e:
                 failures.append(_("Failed to delete attribute \
                                 %(attribute)s: %(error)s")
