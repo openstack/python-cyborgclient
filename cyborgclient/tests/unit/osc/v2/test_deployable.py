@@ -10,10 +10,14 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
+
+
 import copy
 
+from cyborgclient import exceptions as exc
 from cyborgclient.osc.v2 import deployable as osc_deployable
 from cyborgclient.tests.unit.osc.v2 import fakes as acc_fakes
+from openstack import exceptions as sdk_exc
 
 
 class TestDeployable(acc_fakes.TestAccelerator):
@@ -133,3 +137,14 @@ class TestDeployableShow(TestDeployable):
             acc_fakes.deployable_name
         ]
         self.assertEqual(datalist, list(data))
+
+    def test_deployable_show_not_exist(self):
+        get_arq_req = self.mock_acc_client.get_deployable
+        get_arq_req.side_effect = sdk_exc.ResourceNotFound
+        arglist = [acc_fakes.deployable_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.assertRaisesRegex(
+            exc.CommandError,
+            'deployable not found: %s' % acc_fakes.deployable_uuid,
+            self.cmd.take_action, parsed_args)
