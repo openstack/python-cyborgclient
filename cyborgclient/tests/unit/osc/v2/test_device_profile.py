@@ -148,6 +148,31 @@ class TestDeviceProfileShow(TestDeviceProfile):
             'device_profile %s not found' % acc_fakes.device_profile_name,
             self.cmd.take_action, parsed_args)
 
+    def test_device_profile_show_with_id(self):
+        fake_dp = acc_fakes.FakeAcceleratorResource(
+            None,
+            copy.deepcopy(acc_fakes.DEVICE_PROFILE),
+            loaded=True)
+        self.mock_acc_client.get_device_profile.return_value = fake_dp
+
+        arg_list = [acc_fakes.device_profile_uuid]
+        verify_list = []
+        parsed_args = self.check_parser(self.cmd, arg_list, verify_list)
+        result = self.cmd.take_action(parsed_args)
+        columns = (
+            "created_at",
+            "updated_at",
+            "uuid",
+            "name",
+            "groups",
+            "description",
+        )
+        formatters = {'data': utils.json_formatter}
+        expected = oscutils.get_dict_properties(acc_fakes.DEVICE_PROFILE,
+                                                columns,
+                                                formatters=formatters)
+        self.assertEqual(result, (columns, expected))
+
 
 class TestDeviceProfileCreate(TestDeviceProfile):
 
