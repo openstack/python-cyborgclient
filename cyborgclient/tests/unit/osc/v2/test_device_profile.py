@@ -137,7 +137,7 @@ class TestDeviceProfileShow(TestDeviceProfile):
                                                 formatters=formatters)
         self.assertEqual(result, (columns, expected))
 
-    def test_device_profile_show_not_exist(self):
+    def test_device_profile_show_not_exist_with_name(self):
         get_arq_req = self.mock_acc_client.get_device_profile
         get_arq_req.side_effect = sdk_exc.ResourceNotFound
         arglist = [acc_fakes.device_profile_name]
@@ -172,6 +172,17 @@ class TestDeviceProfileShow(TestDeviceProfile):
                                                 columns,
                                                 formatters=formatters)
         self.assertEqual(result, (columns, expected))
+
+    def test_device_profile_show_not_exist_with_id(self):
+        get_arq_req = self.mock_acc_client.get_device_profile
+        get_arq_req.side_effect = sdk_exc.ResourceNotFound
+        arglist = [acc_fakes.device_profile_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.assertRaisesRegex(
+            exc.CommandError,
+            'device_profile %s not found' % acc_fakes.device_profile_uuid,
+            self.cmd.take_action, parsed_args)
 
 
 class TestDeviceProfileCreate(TestDeviceProfile):
