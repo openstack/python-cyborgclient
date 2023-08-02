@@ -138,6 +138,17 @@ class TestAcceleratorRequestDelete(TestAcceleratorRequest):
         self.mock_acc_client.delete_accelerator_request.assert_called_with(
             acc_fakes.accelerator_request_uuid, False)
 
+    def test_accelerator_request_delete_with_instance_uuid(self):
+        accelerator_request_instance_uuid = \
+            str(acc_fakes.accelerator_request_instance_uuid)
+        arglist = [accelerator_request_instance_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.cmd.take_action(parsed_args)
+
+        self.mock_acc_client.delete_accelerator_request.assert_called_with(
+            accelerator_request_instance_uuid, False)
+
 
 class TestAcceleratorRequestCreate(TestAcceleratorRequest):
 
