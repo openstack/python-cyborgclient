@@ -148,3 +148,46 @@ class TestDeployableShow(TestDeployable):
             exc.CommandError,
             'deployable not found: %s' % acc_fakes.deployable_uuid,
             self.cmd.take_action, parsed_args)
+
+
+class TestDeployableProgram(TestDeployable):
+
+    def setUp(self):
+        super(TestDeployableProgram, self).setUp()
+
+        fake_arq = acc_fakes.FakeAcceleratorResource(
+            None,
+            copy.deepcopy(acc_fakes.DEPLOYABLE),
+            loaded=True)
+        self.mock_acc_client.program.return_value = fake_arq
+        self.mock_acc_client.get_deployable.return_value = fake_arq
+        self.cmd = osc_deployable.ProgramDeployable(self.app, None)
+
+    def test_deployable_program(self):
+        arglist = [acc_fakes.deployable_uuid, acc_fakes.image_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+
+        program_info = [{'path': '/program',
+                         'value': [{'image_uuid': acc_fakes.image_uuid}],
+                         'op': 'replace'}]
+        self.mock_acc_client.program.assert_called_with(
+            acc_fakes.deployable_uuid, program_info)
+
+        collist = (
+            'created_at',
+            'updated_at',
+            'uuid',
+            'name'
+        )
+
+        self.assertEqual(collist, columns)
+
+        datalist = [
+            acc_fakes.deployable_created_at,
+            acc_fakes.deployable_updated_at,
+            acc_fakes.deployable_uuid,
+            acc_fakes.deployable_name
+        ]
+        self.assertEqual(datalist, list(data))

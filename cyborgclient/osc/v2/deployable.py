@@ -163,5 +163,5 @@ class ProgramDeployable(command.ShowOne):
         program_info = [{'path': '/program',
                          'value': [{'image_uuid': image_uuid}],
                          'op': 'replace'}]
-        acc_client.update_deployable(dep_uuid, program_info)
+        acc_client.program(dep_uuid, program_info)
         return _show_deployable(acc_client, dep_uuid)

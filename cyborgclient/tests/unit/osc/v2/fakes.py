@@ -16,6 +16,7 @@ from osc_lib.tests import utils
 from unittest import mock
 import uuid
 
+image_uuid = uuid.uuid4().hex
 deployable_created_at = '2019-06-24T00:00:00.000000+00:00'
 deployable_updated_at = '2019-06-24T11:11:11.111111+11:11'
 deployable_uuid = uuid.uuid4().hex
@@ -134,6 +135,7 @@ class TestAccelerator(utils.TestCommand):
 
         self.app.client_manager.auth_ref = mock.MagicMock(auth_token="TOKEN")
         self.app.client_manager.accelerator = mock.MagicMock()
+        self.app.client_manager.image = mock.MagicMock()
 
 
 class FakeAcceleratorResource(fakes.FakeResource):
