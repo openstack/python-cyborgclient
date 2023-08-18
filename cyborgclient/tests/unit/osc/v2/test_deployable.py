@@ -203,3 +203,14 @@ class TestDeployableProgram(TestDeployable):
             exc.CommandError,
             'image not found: %s' % acc_fakes.image_uuid,
             self.cmd.take_action, parsed_args)
+
+    def test_deployable_program_with_deployable_uuid_not_exist(self):
+        get_arq_req = self.mock_acc_client.get_deployable
+        get_arq_req.side_effect = sdk_exc.ResourceNotFound
+        arglist = [acc_fakes.deployable_uuid, acc_fakes.image_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.assertRaisesRegex(
+            exc.CommandError,
+            'deployable not found: %s' % acc_fakes.deployable_uuid,
+            self.cmd.take_action, parsed_args)
