@@ -26,6 +26,7 @@ class TestDeployable(acc_fakes.TestAccelerator):
         super(TestDeployable, self).setUp()
 
         self.mock_acc_client = self.app.client_manager.accelerator
+        self.mock_image_client = self.app.client_manager.image
         self.mock_acc_client.reset_mock()
 
 
@@ -191,3 +192,14 @@ class TestDeployableProgram(TestDeployable):
             acc_fakes.deployable_name
         ]
         self.assertEqual(datalist, list(data))
+
+    def test_deployable_program_with_image_uuid_not_exist(self):
+        get_arq_req = self.mock_image_client.get
+        get_arq_req.side_effect = sdk_exc.ResourceNotFound
+        arglist = [acc_fakes.deployable_uuid, acc_fakes.image_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.assertRaisesRegex(
+            exc.CommandError,
+            'image not found: %s' % acc_fakes.image_uuid,
+            self.cmd.take_action, parsed_args)
