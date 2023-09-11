@@ -134,7 +134,7 @@ class DeleteAttribute(command.Command):
                 raise exc.CommandError(_('Attribute %s not found') % uuid)
             except exc.ClientException as e:
                 failures.append(_("Failed to delete attribute \
-                                %(attribute)s: %(error)s")
+                                %(uuid)s: %(error)s")
                                 % {'uuid': uuid, 'error': e})
         if failures:
             raise exc.ClientException("\n".join(failures))
