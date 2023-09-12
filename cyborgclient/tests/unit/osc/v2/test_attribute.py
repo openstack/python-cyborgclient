@@ -216,3 +216,13 @@ class TestAttributeDelete(TestAttribute):
             exc.CommandError,
             'Attribute %s not found' % acc_fakes.attribute_uuid,
             self.cmd.take_action, parsed_args)
+
+    def test_attribute_delete_for_client_exception(self):
+        get_arq_req = self.mock_acc_client.delete_attribute
+        get_arq_req.side_effect = exc.ClientException
+        arglist = [acc_fakes.attribute_uuid]
+        verifylist = []
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.assertRaises(
+            exc.ClientException,
+            self.cmd.take_action, parsed_args)
