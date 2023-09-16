@@ -88,6 +88,7 @@ class TestDeviceList(TestDevice):
             'hostname',
             'std_board_info',
             'vendor_board_info',
+            'status'
         )
         self.assertEqual(collist, columns)
 
@@ -101,6 +102,7 @@ class TestDeviceList(TestDevice):
             acc_fakes.device_hostname,
             acc_fakes.device_std_board_info,
             acc_fakes.device_vendor_board_info,
+            '',
         ), ]
         self.assertEqual(datalist, list(data))
 
@@ -135,7 +137,8 @@ class TestDeviceShow(TestDevice):
             'model',
             'hostname',
             'std_board_info',
-            'vendor_board_info'
+            'vendor_board_info',
+            'status'
         )
 
         self.assertEqual(collist, columns)
@@ -150,6 +153,7 @@ class TestDeviceShow(TestDevice):
             acc_fakes.device_hostname,
             acc_fakes.device_std_board_info,
             acc_fakes.device_vendor_board_info,
+            ''
         ]
         self.assertEqual(datalist, list(data))
 
