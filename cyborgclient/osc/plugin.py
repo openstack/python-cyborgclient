@@ -22,7 +22,7 @@ from osc_lib import utils
 
 LOG = logging.getLogger(__name__)
 
-DEFAULT_ACCELERATOR_API_VERSION = '2'
+DEFAULT_ACCELERATOR_API_VERSION = '2.3'
 API_VERSION_OPTION = 'os_accelerator_api_version'
 API_NAME = 'accelerator'
 CURRENT_API_VERSION = '2'

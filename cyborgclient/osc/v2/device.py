@@ -51,7 +51,8 @@ class ListDevice(command.Lister):
                 "model",
                 "hostname",
                 "std_board_info",
-                "vendor_board_info"
+                "vendor_board_info",
+                "status"
             )
 
             columns = (
@@ -63,7 +64,8 @@ class ListDevice(command.Lister):
                 "model",
                 "hostname",
                 "std_board_info",
-                "vendor_board_info"
+                "vendor_board_info",
+                "status"
             )
         else:
             column_headers = (
@@ -121,7 +123,8 @@ def _show_device(acc_client, uuid):
         "model",
         "hostname",
         "std_board_info",
-        "vendor_board_info"
+        "vendor_board_info",
+        "status"
     )
     try:
         device = acc_client.get_device(uuid)
@@ -133,3 +136,49 @@ def _show_device(acc_client, uuid):
     data = device.to_dict()
     return columns, oscutils.get_dict_properties(data, columns,
                                                  formatters=formatters)
+
+
+class EnableDevice(command.Command):
+    """Enable device ."""
+    log = logging.getLogger(__name__ + ".EnableDevice")
+
+    def get_parser(self, prog_name):
+        parser = super(EnableDevice, self).get_parser(prog_name)
+        parser.add_argument(
+            "device",
+            metavar="<uuid>",
+            help=_("UUID of the device.")
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)", parsed_args)
+        acc_client = self.app.client_manager.accelerator
+        uuid = parsed_args.device
+        try:
+            acc_client.enable_device(uuid)
+        except sdk_exc.ResourceNotFound:
+            raise exc.CommandError(_('device not found: %s') % uuid)
+
+
+class DisableDevice(command.Command):
+    """Disable device ."""
+    log = logging.getLogger(__name__ + ".DisableDevice")
+
+    def get_parser(self, prog_name):
+        parser = super(DisableDevice, self).get_parser(prog_name)
+        parser.add_argument(
+            "device",
+            metavar="<uuid>",
+            help=_("UUID of the device.")
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)", parsed_args)
+        acc_client = self.app.client_manager.accelerator
+        uuid = parsed_args.device
+        try:
+            acc_client.disable_device(uuid)
+        except sdk_exc.ResourceNotFound:
+            raise exc.CommandError(_('device not found: %s') % uuid)
