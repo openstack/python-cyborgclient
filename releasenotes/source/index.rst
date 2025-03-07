@@ -7,6 +7,7 @@ cyborgclient Release Notes
 
    unreleased
    2026.1
+   2025.1
    2024.2
    2024.1
    2023.2
