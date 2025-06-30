@@ -14,7 +14,7 @@
 # limitations under the License.
 
 from keystoneauth1 import session as ksa_session
-import os_client_config
+from openstack import config as occ
 from oslo_utils import importutils
 
 from cyborgclient.common import httpclient
@@ -28,8 +28,8 @@ DEFAULT_SERVICE_TYPE = 'accelerator'
 
 
 def _load_session(cloud=None, insecure=False, timeout=None, **kwargs):
-    cloud_config = os_client_config.OpenStackConfig()
-    cloud_config = cloud_config.get_one_cloud(
+    cloud_config = occ.OpenStackConfig()
+    cloud_config = cloud_config.get_one(
         cloud=cloud,
         verify=not insecure,
         **kwargs)
