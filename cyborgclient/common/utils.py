@@ -48,7 +48,7 @@ def common_filters(marker=None, limit=None, sort_key=None, sort_dir=None):
 
 def add_filters(filters, **kwargs):
     if kwargs:
-        for field, value in kwargs.iteritems():
+        for field, value in kwargs.items():
             filters.append('filters.field=%s' % field)
             filters.append('filters.value=%s' % value)
     return filters
