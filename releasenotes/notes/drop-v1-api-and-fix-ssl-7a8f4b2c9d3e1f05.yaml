@@ -1,0 +1,27 @@
+---
+upgrade:
+  - |
+    The deprecated v1 API implementation has been removed from
+    python-cyborgclient. This includes the native ``cyborg`` CLI shell,
+    the v1 client library (``cyborgclient.v1``), and the v1 OSC plugin
+    (``openstack.accelerator.v1``).
+
+    Users should migrate to the v2 API using the OpenStack client plugin
+    commands (``openstack accelerator`` subcommands) which are available
+    via ``openstack.accelerator.v2`` entry points.
+
+deprecations:
+  - |
+    The native Python API bindings in python-cyborgclient are now deprecated.
+    Users should migrate to the OpenStack SDK for programmatic access to the
+    Cyborg API. The OpenStack SDK provides a modern, well-maintained interface
+    for interacting with Cyborg and other OpenStack services. See
+    https://docs.openstack.org/openstacksdk/latest/ for documentation.
+
+fixes:
+  - |
+    Fixed Python 3.12+ compatibility by removing legacy HTTP client code
+    that used ``ssl.wrap_socket()``, which was removed in Python 3.12.
+    The removal of the deprecated v1 API implementation eliminates this
+    compatibility issue. The modern v2 API implementation using OpenStack
+    SDK remains fully functional and compatible with Python 3.12+.
