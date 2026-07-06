@@ -160,7 +160,7 @@ class TestDeployableProgram(TestDeployable):
             None,
             copy.deepcopy(acc_fakes.DEPLOYABLE),
             loaded=True)
-        self.mock_acc_client.program.return_value = fake_arq
+        self.mock_acc_client.update_deployable.return_value = fake_arq
         self.mock_acc_client.get_deployable.return_value = fake_arq
         self.cmd = osc_deployable.ProgramDeployable(self.app, None)
 
@@ -173,7 +173,7 @@ class TestDeployableProgram(TestDeployable):
         program_info = [{'path': '/program',
                          'value': [{'image_uuid': acc_fakes.image_uuid}],
                          'op': 'replace'}]
-        self.mock_acc_client.program.assert_called_with(
+        self.mock_acc_client.update_deployable.assert_called_with(
             acc_fakes.deployable_uuid, program_info)
 
         collist = (
