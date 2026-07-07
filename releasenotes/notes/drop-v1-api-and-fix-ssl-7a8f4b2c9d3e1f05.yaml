@@ -10,11 +10,7 @@ upgrade:
     commands (``openstack accelerator`` subcommands) which are available
     via ``openstack.accelerator.v2`` entry points.
 
-deprecations:
-  - |
-    The native Python API bindings in python-cyborgclient are now deprecated.
-    Users should migrate to the OpenStack SDK for programmatic access to the
-    Cyborg API. The OpenStack SDK provides a modern, well-maintained interface
+    The OpenStack SDK provides a modern, well-maintained interface
     for interacting with Cyborg and other OpenStack services. See
     https://docs.openstack.org/openstacksdk/latest/ for documentation.
 
